@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Validator;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
     /**
      * Create a new AuthController instance.
@@ -13,7 +13,7 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','userProfile']]);
     }
     /**
      * Get a JWT via given credentials.
@@ -80,7 +80,23 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function userProfile() {
-        return response()->json(auth()->user());
+        // Memeriksa apakah pengguna terautentikasi
+        if (Auth::check()) {
+            // Jika pengguna terautentikasi, ambil data pengguna dari database
+            $user = Auth::user();
+    
+            // Memeriksa apakah data pengguna ada
+            if ($user) {
+                // Jika data pengguna ada, kembalikan respons JSON yang berisi data pengguna
+                return response()->json($user);
+            } else {
+                // Jika data pengguna tidak ada, kembalikan respons dengan pesan error
+                return response()->json(['error' => 'User not found'], 404);
+            }
+        } else {
+            // Jika pengguna tidak terautentikasi, kembalikan respons dengan pesan error
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
     /**
      * Get the token array structure.

@@ -1,8 +1,9 @@
 <?php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,10 +14,12 @@ use App\Http\Controllers\UserController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
 Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('login', [LoginController::class, 'login']);
     Route::post('/register', [UserController::class, 'store']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
-    Route::get('/user-profile', [AuthController::class, 'userProfile']);    
+    Route::get('userProfile', [LoginController::class, 'userProfile']); 
+    Route::post('/logout', [LoginController::class, 'logout']);
+    Route::post('/refresh', [LoginController::class, 'refresh']);   
 });
